@@ -1,15 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getEntriesByDate, getEntriesRange } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import { format, subDays } from "date-fns";
 import type { DailySummary } from "@/lib/types";
 
 export async function GET(request: NextRequest) {
+  let user;
+  try {
+    user = await requireUser();
+  } catch (response) {
+    return response as NextResponse;
+  }
+
   const { searchParams } = new URL(request.url);
   const days = parseInt(searchParams.get("days") || "7", 10);
   const date = searchParams.get("date");
 
   if (date) {
-    const entries = getEntriesByDate(date);
+    const entries = await getEntriesByDate(user.id, date);
     const summary: DailySummary = {
       date,
       total_calories: entries.reduce((s, e) => s + e.total_calories, 0),
@@ -23,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   const today = format(new Date(), "yyyy-MM-dd");
   const start = format(subDays(new Date(), days - 1), "yyyy-MM-dd");
-  const entries = getEntriesRange(start, today);
+  const entries = await getEntriesRange(user.id, start, today);
 
   const byDate = new Map<string, DailySummary>();
   for (let i = 0; i < days; i++) {
@@ -49,8 +57,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const summaries = Array.from(byDate.values()).sort(
-    (a, b) => a.date.localeCompare(b.date)
+  const summaries = Array.from(byDate.values()).sort((a, b) =>
+    a.date.localeCompare(b.date)
   );
 
   return NextResponse.json({ summaries });

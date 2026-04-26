@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getSessionUser } from "@/lib/auth";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
   description: "Track your macros with natural language powered by AI",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getSessionUser();
+
   return (
     <html
       lang="en"
@@ -32,7 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-muted/30 font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Nav />
+          {user && <Nav user={user} />}
           <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
             {children}
           </main>

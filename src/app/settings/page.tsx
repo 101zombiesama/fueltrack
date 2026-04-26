@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Save, Target } from "lucide-react";
+import { AdminUsers } from "@/components/admin-users";
+import { ProfileSection } from "@/components/profile-section";
 import type { DailyGoals } from "@/lib/types";
 
 export default function SettingsPage() {
@@ -46,9 +48,11 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-2xl font-bold">Settings</h1>
         <p className="text-muted-foreground">
-          Configure your daily macro goals
+          Manage your account and daily macro goals
         </p>
       </div>
+
+      <ProfileSection />
 
       {/* Quick presets */}
       <Card>
@@ -153,6 +157,8 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+
+      <AdminUsers />
 
       {/* Info */}
       <Card>

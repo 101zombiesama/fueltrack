@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getEntryById, updateEntry } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import type { FoodItem } from "@/lib/types";
 
 const client = new OpenAI();
@@ -33,6 +34,13 @@ Guidelines:
 - Return ONLY valid JSON, no explanation text`;
 
 export async function POST(request: NextRequest) {
+  let user;
+  try {
+    user = await requireUser();
+  } catch (response) {
+    return response as NextResponse;
+  }
+
   try {
     const { id, instruction } = await request.json();
 
@@ -43,7 +51,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const existing = getEntryById(id);
+    const existing = await getEntryById(user.id, id);
     if (!existing) {
       return NextResponse.json(
         { error: "Entry not found" },
@@ -80,7 +88,7 @@ export async function POST(request: NextRequest) {
     const totalCarbs = items.reduce((s, i) => s + i.carbs, 0);
     const totalFat = items.reduce((s, i) => s + i.fat, 0);
 
-    const entry = updateEntry(id, {
+    const entry = await updateEntry(user.id, id, {
       meal_type: parsed.meal_type || existing.meal_type,
       items,
       total_calories: Math.round(totalCalories * 10) / 10,

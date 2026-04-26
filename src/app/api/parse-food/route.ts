@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { addEntry } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import { format } from "date-fns";
 import type { FoodItem, FoodEntry } from "@/lib/types";
 
@@ -48,6 +49,13 @@ Guidelines:
 - Return ONLY valid JSON, no explanation text`;
 
 export async function POST(request: NextRequest) {
+  let user;
+  try {
+    user = await requireUser();
+  } catch (response) {
+    return response as NextResponse;
+  }
+
   try {
     const { text, localDate, localTime } = await request.json();
 
@@ -94,7 +102,7 @@ export async function POST(request: NextRequest) {
       const totalCarbs = items.reduce((s: number, i: FoodItem) => s + i.carbs, 0);
       const totalFat = items.reduce((s: number, i: FoodItem) => s + i.fat, 0);
 
-      const entry = addEntry({
+      const entry = await addEntry(user.id, {
         date: meal.date || today,
         meal_type: meal.meal_type,
         description: text,

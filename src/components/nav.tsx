@@ -1,10 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, UtensilsCrossed, Settings, Flame } from "lucide-react";
+import {
+  LayoutDashboard,
+  UtensilsCrossed,
+  Settings,
+  Flame,
+  LogOut,
+} from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import type { User } from "@/lib/types";
 
 const links = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -12,8 +20,15 @@ const links = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function Nav() {
+export function Nav({ user }: { user: User }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
@@ -39,7 +54,25 @@ export function Nav() {
             </Link>
           ))}
         </nav>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <span className="hidden text-sm text-muted-foreground sm:inline">
+            {user.username}
+            {user.is_admin && (
+              <span className="ml-1 rounded bg-orange-500/15 px-1.5 py-0.5 text-xs text-orange-600 dark:text-orange-400">
+                admin
+              </span>
+            )}
+          </span>
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            title="Sign out"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </header>
   );
