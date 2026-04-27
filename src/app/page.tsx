@@ -5,32 +5,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalorieRing } from "@/components/dashboard/calorie-ring";
 import { MacroBars } from "@/components/dashboard/macro-bars";
 import { MealCard } from "@/components/dashboard/meal-card";
-import { WeeklyChart } from "@/components/dashboard/weekly-chart";
+import { MacroChart } from "@/components/dashboard/macro-chart";
 import { FoodInput } from "@/components/food-input";
 import { format } from "date-fns";
-import type { FoodEntry, DailyGoals, DailySummary } from "@/lib/types";
+import type { FoodEntry, DailyGoals } from "@/lib/types";
 import { Flame, TrendingUp, Utensils } from "lucide-react";
 
 export default function Dashboard() {
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<DailyGoals>({ calories: 2000, protein: 150, carbs: 200, fat: 65 });
-  const [weeklySummaries, setWeeklySummaries] = useState<DailySummary[]>([]);
   const today = format(new Date(), "yyyy-MM-dd");
 
   const loadData = useCallback(async () => {
-    const [entriesRes, goalsRes, weeklyRes] = await Promise.all([
+    const [entriesRes, goalsRes] = await Promise.all([
       fetch(`/api/entries?date=${today}`),
       fetch("/api/goals"),
-      fetch("/api/summary?days=7"),
     ]);
 
     const entriesData = await entriesRes.json();
     const goalsData = await goalsRes.json();
-    const weeklyData = await weeklyRes.json();
 
     setEntries(entriesData.entries || []);
     setGoals(goalsData);
-    setWeeklySummaries(weeklyData.summaries || []);
   }, [today]);
 
   useEffect(() => {
@@ -132,23 +128,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Weekly Calories</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {weeklySummaries.length > 0 ? (
-              <WeeklyChart
-                summaries={weeklySummaries}
-                calorieGoal={goals.calories}
-              />
-            ) : (
-              <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
-                No data yet. Start logging your meals!
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <MacroChart goals={goals} />
       </div>
 
       {groupedEntries.length > 0 && (
