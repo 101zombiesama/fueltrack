@@ -174,7 +174,7 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
           <TabsContent value="manual" className="space-y-4 mt-4">
             <div className="space-y-2">
               <Label>Meal Type</Label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {(["breakfast", "lunch", "dinner", "snack"] as MealType[]).map((m) => (
                   <Button
                     key={m}
@@ -200,8 +200,8 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       <X className="h-3.5 w-3.5" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-3 sm:col-span-1">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    <div className="col-span-2 sm:col-span-1">
                       <Label className="text-xs">Name</Label>
                       <Input
                         value={item.name}
@@ -213,6 +213,7 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       <Label className="text-xs">Qty</Label>
                       <Input
                         type="number"
+                        inputMode="decimal"
                         value={item.quantity}
                         onChange={(e) => updateItem(i, "quantity", Number(e.target.value))}
                         className="h-8 text-sm"
@@ -227,11 +228,12 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     <div>
                       <Label className="text-xs">Calories</Label>
                       <Input
                         type="number"
+                        inputMode="decimal"
                         value={item.calories}
                         onChange={(e) => updateItem(i, "calories", Number(e.target.value))}
                         className="h-8 text-sm"
@@ -241,6 +243,7 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       <Label className="text-xs">Protein (g)</Label>
                       <Input
                         type="number"
+                        inputMode="decimal"
                         value={item.protein}
                         onChange={(e) => updateItem(i, "protein", Number(e.target.value))}
                         className="h-8 text-sm"
@@ -250,6 +253,7 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       <Label className="text-xs">Carbs (g)</Label>
                       <Input
                         type="number"
+                        inputMode="decimal"
                         value={item.carbs}
                         onChange={(e) => updateItem(i, "carbs", Number(e.target.value))}
                         className="h-8 text-sm"
@@ -259,6 +263,7 @@ export function EditEntryDialog({ entry, open, onOpenChange, onSaved }: EditEntr
                       <Label className="text-xs">Fat (g)</Label>
                       <Input
                         type="number"
+                        inputMode="decimal"
                         value={item.fat}
                         onChange={(e) => updateItem(i, "fat", Number(e.target.value))}
                         className="h-8 text-sm"

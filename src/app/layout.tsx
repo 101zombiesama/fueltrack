@@ -36,7 +36,13 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col bg-muted/30 font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {user && <Nav user={user} />}
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
+          <main
+            className={
+              user
+                ? "mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-24 md:pb-6"
+                : "mx-auto w-full max-w-5xl flex-1 px-4 py-6"
+            }
+          >
             {children}
           </main>
         </ThemeProvider>

@@ -66,18 +66,29 @@ export default function LogPage() {
       <FoodInput onEntryAdded={loadEntries} />
 
       {/* Date Navigation */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={prevDay}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
+          <Button variant="outline" size="icon" onClick={prevDay} aria-label="Previous day">
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="flex items-center gap-2 px-3">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">
-              {format(parseISO(date), "EEEE, MMMM d, yyyy")}
+          <div className="flex min-w-0 flex-1 items-center gap-2 px-1 sm:px-3">
+            <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="truncate font-medium">
+              <span className="hidden sm:inline">
+                {format(parseISO(date), "EEEE, MMMM d, yyyy")}
+              </span>
+              <span className="sm:hidden">
+                {format(parseISO(date), "EEE, MMM d")}
+              </span>
             </span>
           </div>
-          <Button variant="outline" size="icon" onClick={nextDay} disabled={isToday}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={nextDay}
+            disabled={isToday}
+            aria-label="Next day"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

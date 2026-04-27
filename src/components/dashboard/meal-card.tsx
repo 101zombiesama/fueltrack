@@ -28,7 +28,7 @@ export function MealCard({ entry, onDelete, onUpdated }: MealCardProps) {
     <>
       <Card className="group">
         <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-2">
             <CardTitle className="flex items-center gap-2 text-base">
               <span>{mealEmoji[entry.meal_type]}</span>
               <span className="capitalize">{entry.meal_type}</span>
@@ -40,8 +40,9 @@ export function MealCard({ entry, onDelete, onUpdated }: MealCardProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-7 w-7 md:opacity-60 md:group-hover:opacity-100 transition-opacity"
                 onClick={() => setEditOpen(true)}
+                aria-label="Edit entry"
               >
                 <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
               </Button>
@@ -49,8 +50,9 @@ export function MealCard({ entry, onDelete, onUpdated }: MealCardProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="h-7 w-7 md:opacity-60 md:group-hover:opacity-100 transition-opacity"
                   onClick={() => onDelete(entry.id)}
+                  aria-label="Delete entry"
                 >
                   <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                 </Button>
@@ -62,25 +64,24 @@ export function MealCard({ entry, onDelete, onUpdated }: MealCardProps) {
           <p className="text-sm text-muted-foreground mb-3 italic">
             &ldquo;{entry.description}&rdquo;
           </p>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {entry.items.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between text-sm"
-              >
-                <span>
-                  {item.quantity} {item.unit} {item.name}
-                </span>
-                <div className="flex gap-3 text-xs text-muted-foreground tabular-nums">
-                  <span>{Math.round(item.calories)} cal</span>
-                  <span className="text-blue-500">{item.protein}g P</span>
-                  <span className="text-amber-500">{item.carbs}g C</span>
-                  <span className="text-rose-500">{item.fat}g F</span>
+              <div key={i} className="text-sm">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <span className="min-w-0">
+                    {item.quantity} {item.unit} {item.name}
+                  </span>
+                  <div className="flex flex-wrap gap-x-2.5 gap-y-1 text-xs text-muted-foreground tabular-nums">
+                    <span>{Math.round(item.calories)} cal</span>
+                    <span className="text-blue-500">{item.protein}g P</span>
+                    <span className="text-amber-500">{item.carbs}g C</span>
+                    <span className="text-rose-500">{item.fat}g F</span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-3 flex gap-4 text-xs font-medium border-t pt-2">
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium border-t pt-2">
             <span className="text-blue-500">P: {Math.round(entry.total_protein)}g</span>
             <span className="text-amber-500">C: {Math.round(entry.total_carbs)}g</span>
             <span className="text-rose-500">F: {Math.round(entry.total_fat)}g</span>
