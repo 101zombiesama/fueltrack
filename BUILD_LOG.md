@@ -47,7 +47,7 @@ Complete food tracking dashboard with AI-powered natural language input.
 
 ### Setup Required
 1. `npm install`
-2. Copy `.env.example` to `.env` and add your `ANTHROPIC_API_KEY`
+2. Copy `.env.example` to `.env.local` and fill in the values (see comments in the file)
 3. `npm run dev`
 4. Database auto-creates on first request
 
